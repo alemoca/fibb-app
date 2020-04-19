@@ -1,0 +1,33 @@
+sudo: required
+# Specify docker as a dependency
+services:
+  - docker
+# where the image can be found
+# Build test version of React project
+# Run tests
+before_install:
+  - docker build -t alemoca/react-test -f ./client/Dockerfile.dev ./client
+
+language: generic
+# test running section
+# -- --coverage making sure that the test script eventually exits with status code 0 or 1
+script:
+  - docker run -e CI=true alemoca/react-test npm test -- --coverage
+# Build prod versions of all projects
+# Push all to docker hub
+after_succes:
+  - docker build -t alemoca/multi-client ./client
+  - docker build -t alemoca/multi-nginx ./nginx
+  - docker build -t alemoca/multi-server ./server
+  - docker build -t alemoca/multi-worker ./worker
+  # Take images and push it to Docker Hub
+
+# To push those images we have to Login into the docker CLI
+# DOCKER_PASSWORD and  DOCKER_ID are env variables.
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# push the images
+  - docker push alemoca/multi-client
+  - docker push alemoca/multi-nginx
+  - docker push alemoca/multi-client
+  - docker push alemoca/multi-worker
+# Tell Elastic Beanstalk to update
