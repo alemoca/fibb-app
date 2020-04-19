@@ -12,7 +12,7 @@ language: generic
 # test running section
 # -- --coverage making sure that the test script eventually exits with status code 0 or 1
 script:
-  - docker run -e CI=true alemoca/react-test npm test -- --coverage
+  - docker run alemoca/react-test npm test -- --coverage
 # Build prod versions of all projects
 # Push all to docker hub
 after_succes:
