@@ -31,3 +31,18 @@ after_succes:
   - docker push alemoca/multi-client
   - docker push alemoca/multi-worker
 # Tell Elastic Beanstalk to update
+
+# deploy app on AWS
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: us-west-1
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-us-west-1-435178343867
+  bucket_path: docker-multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
